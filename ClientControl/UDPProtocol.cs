@@ -12,6 +12,7 @@ namespace ClientControl
     class UDPProtocol
     {
         private System.Net.Sockets.UdpClient udpClient;
+        Thread socketReceiveThread;
 
         private int localPort;
         public UDPProtocol(int localPort)
@@ -39,7 +40,7 @@ namespace ClientControl
         {
             System.Net.IPEndPoint remoteEP = null;
 
-            Thread socketReceiveThread = new Thread(() =>
+            socketReceiveThread = new Thread(() =>
             {
                 while (true)
                 {
@@ -72,6 +73,10 @@ namespace ClientControl
 
         public void Close()
         {
+            if (socketReceiveThread.IsAlive)
+            {
+                socketReceiveThread.Abort();
+            }
             udpClient.Close();
             udpClient.Dispose();
         }
