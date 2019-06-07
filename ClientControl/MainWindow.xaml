@@ -15,6 +15,32 @@
 		FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="5,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="0" Name="listViewIPPort">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding UserId}" Header="UserID"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding IP}" Header="IP"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Port}" Header="Port"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button Grid.Row="1" Name="btnRefreshIPPortList" Content="Refresh" Click="BtnRefreshIPPortList_Click"/>
+        </Grid>
+
+        <Border Grid.Column="1" Background="BlueViolet"/>
     </Grid>
 </Window>
