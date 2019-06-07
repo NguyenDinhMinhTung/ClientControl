@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ClientControl.model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -28,19 +30,56 @@ namespace ClientControl
 
         UDPProtocol udpProtocol;
 
+        ObservableCollection<IPPort> listIPPort;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            listIPPort = new ObservableCollection<IPPort>();
+            listViewIPPort.ItemsSource = listIPPort;
+
             udpProtocol = new UDPProtocol(localPort);
             udpProtocol.UdpSocketReceiveStart(RunCommand);
             SendIPPort();
+            RefreshIPPortList();
         }
 
-        public void RunCommand(IPEndPoint ipEndPoint, byte[] data)
+        public void RunCommand(IPEndPoint ipEndPoint, byte[] command)
         {
+            switch (command[0])
+            {
+                case 1:
+                    break;
 
+                case 4:
+                    String strList = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
+                    String[] split = strList.Split('|');
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        listIPPort.Clear();
+                    });
+
+
+                    int i = 0;
+                    while (i < split.Length)
+                    {
+                        int id = int.Parse(split[i++]);
+                        int userid = int.Parse(split[i++]);
+                        String ip = split[i++];
+                        int port = int.Parse(split[i++]);
+                        DateTime dateTime = DateTime.Parse(split[i++]);
+
+                        IPPort ipPort = new IPPort(id, userid, ip, port, dateTime);
+                        Dispatcher.Invoke(() =>
+                        {
+                            listIPPort.Add(ipPort);
+                        });
+                    }
+
+                    break;
+            }
         }
 
         public void SendIPPort()
@@ -54,6 +93,16 @@ namespace ClientControl
             {
                 udpProtocol.Close();
             }
+        }
+
+        public void RefreshIPPortList()
+        {
+            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 4 });
+        }
+
+        private void BtnRefreshIPPortList_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshIPPortList();
         }
     }
 }
