@@ -42,5 +42,7 @@
         </Grid>
 
         <Border Grid.Column="1" Background="BlueViolet"/>
+
+        <Button Grid.Column="3" Name="btnChat" Content="Chat" Click="BtnChat_Click"/>
     </Grid>
 </Window>

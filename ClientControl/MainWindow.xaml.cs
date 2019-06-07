@@ -32,6 +32,8 @@ namespace ClientControl
 
         ObservableCollection<IPPort> listIPPort;
 
+        IPEndPoint clientIP;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -79,6 +81,10 @@ namespace ClientControl
                     }
 
                     break;
+
+                case 7:
+
+                    break;
             }
         }
 
@@ -103,6 +109,35 @@ namespace ClientControl
         private void BtnRefreshIPPortList_Click(object sender, RoutedEventArgs e)
         {
             RefreshIPPortList();
+        }
+
+        private void BtnChat_Click(object sender, RoutedEventArgs e)
+        {
+            if (listViewIPPort.SelectedIndex >= 0)
+            {
+                IPPort ipport = listViewIPPort.SelectedItems[0] as IPPort;
+                int userid = ipport.UserId;
+
+                clientIP = new IPEndPoint(IPAddress.Parse(ipport.IP), ipport.Port);
+
+                udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
+
+                sendChatMess("HELLO");
+            }
+        }
+
+        private void sendChatMess(String text)
+        {
+            if (clientIP == null) return;
+
+            byte[] textbyte = System.Text.Encoding.UTF8.GetBytes(text);
+            byte[] sendbyte = new byte[textbyte.Length + 1];
+
+            sendbyte[0] = 8;
+
+            Array.Copy(textbyte, 0, sendbyte, 1, textbyte.Length);
+
+            udpProtocol.UdpSocketSend(clientIP, sendbyte);
         }
     }
 }
