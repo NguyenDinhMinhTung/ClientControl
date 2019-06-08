@@ -13,36 +13,80 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="MainWindow" Height="450" Width="800" Closing="Window_Closing">
+        Title="MainWindow" Height="337.5" Width="477.5" Closing="Window_Closing" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="320"/>
-            <ColumnDefinition Width="2"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0" Margin="5,5,5,5">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+        <local:TitleBar DataContext="Controls"/>
 
-            <ListView Grid.Row="0" Name="listViewIPPort">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding UserId}" Header="UserID"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding IP}" Header="IP"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Port}" Header="Port"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-            <Button Grid.Row="1" Name="btnRefreshIPPortList" Content="Refresh" Click="BtnRefreshIPPortList_Click"/>
+            <Grid Grid.Column="0" Margin="5,5,5,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <ListView Grid.Row="0" Name="listViewUsers" SelectionChanged="ListViewUsers_SelectionChanged">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="UserName"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Button Grid.Row="1" Name="btnRefreshUserList" Content="Refresh" Click="BtnRefreshUserList_Click"/>
+            </Grid>
+
+            <Border Grid.Column="1" Background="BlueViolet" Margin="0 5 0 5" CornerRadius="2"/>
+
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="10 10 10 10" Name="txtUserName" TextAlignment="Center"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="10 0 10 10" Name="txtIP"/>
+                    <TextBlock Grid.Column="1" Margin="10 0 10 10" Name="txtPort" TextAlignment="Right"/>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" Grid.Column="0" Name="btnChat" Content="Chat" Click="BtnChat_Click" Height="60" Margin="10 10 10 10"/>
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnFileExplorer" Content="File Explorer" Height="60" Margin="10 10 10 10"/>
+                    <Button Grid.Row="1" Grid.Column="0" Name="btnViewScreen" Content="View Screen" Height="60" Margin="10 10 10 10"/>
+                    <Button Grid.Row="1" Grid.Column="1" Name="btnMessageBox" Content="Message Box" Height="60" Margin="10 10 10 10"/>
+                    <Button Grid.Row="2" Grid.Column="0" Name="btnShutdown" Content="Shutdown" Height="60" Margin="10 10 10 10"/>
+                    <Button Grid.Row="2" Grid.Column="1" Name="btnRestart" Content="Restart" Height="60" Margin="10 10 10 10"/>
+                </Grid>
+
+            </Grid>
+
         </Grid>
-
-        <Border Grid.Column="1" Background="BlueViolet"/>
-
-        <Button Grid.Column="3" Name="btnChat" Content="Chat" Click="BtnChat_Click"/>
     </Grid>
 </Window>

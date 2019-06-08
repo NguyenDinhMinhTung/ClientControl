@@ -31,20 +31,29 @@ namespace ClientControl
         UDPProtocol udpProtocol;
 
         ObservableCollection<IPPort> listIPPort;
+        ObservableCollection<User> listUser;
 
-        IPEndPoint clientIP;
+        List<ChatWindow> listChatWindow;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            //chatwindow chatwindow = new chatwindow((mess) => { });
+            //chatwindow.show();
+
             listIPPort = new ObservableCollection<IPPort>();
-            listViewIPPort.ItemsSource = listIPPort;
+            listUser = new ObservableCollection<User>();
+            listChatWindow = new List<ChatWindow>();
+
+            listViewUsers.ItemsSource = listUser;
 
             udpProtocol = new UDPProtocol(localPort);
             udpProtocol.UdpSocketReceiveStart(RunCommand);
             SendIPPort();
-            RefreshIPPortList();
+            RefreshUserList();
+            GetIPPortList();
+            enableControlButton(false);
         }
 
         public void RunCommand(IPEndPoint ipEndPoint, byte[] command)
@@ -85,12 +94,47 @@ namespace ClientControl
                 case 7:
 
                     break;
+
+                case 8:
+                    IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == command[1]; }).FirstOrDefault();
+                    String mess = System.Text.Encoding.UTF8.GetString(command, 2, command.Length - 2);
+
+                    ShowChatWindow(ipport, mess);
+                    break;
+
+                case 9:
+                    String strListUser = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
+                    String[] splitListUser = strListUser.Split('|');
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        listUser.Clear();
+                    });
+
+                    int k = 0;
+                    while (k < splitListUser.Length)
+                    {
+                        int id = int.Parse(splitListUser[k++]);
+                        String name = splitListUser[k++];
+
+                        User user = new User(id, name);
+                        Dispatcher.Invoke(() =>
+                        {
+                            listUser.Add(user);
+                        });
+                    }
+                    break;
             }
         }
 
         public void SendIPPort()
         {
             udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 3, 1 });
+        }
+
+        private void GetIPPortList()
+        {
+            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 4 });
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -101,32 +145,79 @@ namespace ClientControl
             }
         }
 
-        public void RefreshIPPortList()
+        public void RefreshUserList()
         {
-            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 4 });
+            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 9 });
         }
 
-        private void BtnRefreshIPPortList_Click(object sender, RoutedEventArgs e)
+        private void BtnRefreshUserList_Click(object sender, RoutedEventArgs e)
         {
-            RefreshIPPortList();
+            RefreshUserList();
+            GetIPPortList();
+        }
+
+        private void ShowChatWindow(IPPort iPPort, String message = null)
+        {
+            ChatWindow chatWindow = listChatWindow.Where((chatwin) => { return chatwin.UserID == iPPort.UserId; }).FirstOrDefault();
+
+            if (chatWindow == null)
+            {
+                chatWindow = new ChatWindow(mess =>
+                {
+                    SendChatMess(mess, iPPort.IP, iPPort.Port);
+                },
+                   iPPort.UserId);
+
+                chatWindow.SetCloseAction(() =>
+                {
+                    listChatWindow.Remove(chatWindow);
+                });
+
+                listChatWindow.Add(chatWindow);
+            }
+
+            chatWindow.Show();
+
+            if (message != null)
+            {
+                chatWindow.PushMessage(message, false);
+            }
         }
 
         private void BtnChat_Click(object sender, RoutedEventArgs e)
         {
-            if (listViewIPPort.SelectedIndex >= 0)
+            if (listViewUsers.SelectedIndex >= 0)
             {
-                IPPort ipport = listViewIPPort.SelectedItems[0] as IPPort;
+                User user = listViewUsers.SelectedItem as User;
+                IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
                 int userid = ipport.UserId;
-
-                clientIP = new IPEndPoint(IPAddress.Parse(ipport.IP), ipport.Port);
 
                 udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
 
-                sendChatMess("HELLO");
+                udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
+
+                ShowChatWindow(ipport);
             }
         }
 
-        private void sendChatMess(String text)
+        private void setUserStatus(User user)
+        {
+            if (user != null)
+            {
+                IPPort ipPort = listIPPort.Where(ipport => { return ipport.UserId == user.ID; }).FirstOrDefault();
+                txtUserName.Text = user.Name;
+                txtIP.Text = "IP: " + ipPort.IP;
+                txtPort.Text = "Port: " + ipPort.Port;
+            }
+            else
+            {
+                txtUserName.Text = "";
+                txtIP.Text = "IP: ";
+                txtPort.Text = "Port: ";
+            }
+        }
+
+        private void SendChatMess(String text, String clientIP, int port)
         {
             if (clientIP == null) return;
 
@@ -137,7 +228,28 @@ namespace ClientControl
 
             Array.Copy(textbyte, 0, sendbyte, 1, textbyte.Length);
 
-            udpProtocol.UdpSocketSend(clientIP, sendbyte);
+            udpProtocol.UdpSocketSend(clientIP, port, sendbyte);
+        }
+
+        private void enableControlButton(Boolean isEnable)
+        {
+            btnChat.IsEnabled = btnFileExplorer.IsEnabled =
+            btnMessageBox.IsEnabled = btnRestart.IsEnabled =
+            btnShutdown.IsEnabled = btnViewScreen.IsEnabled = isEnable;
+        }
+
+        private void ListViewUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listViewUsers.SelectedIndex < 0)
+            {
+                enableControlButton(false);
+                setUserStatus(null);
+            }
+            else
+            {
+                enableControlButton(true);
+                setUserStatus(listViewUsers.SelectedItem as User);
+            }
         }
     }
 }

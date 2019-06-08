@@ -40,3 +40,8 @@ C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientCont
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.csproj.CopyComplete
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.exe
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.pdb
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChatWindow.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChatWindow.baml
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\TitleBar.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\TitleBar.baml

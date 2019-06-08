@@ -16,7 +16,7 @@ namespace ClientControl.model
             this.ID = id;
             this.Name = name;
         }
-        public int ID { get; set; }
-        public String Name { get; set; }
+        public int ID { get { return id; } set { id = value; } }
+        public String Name { get { return name; } set { name = value; } }
     }
 }
