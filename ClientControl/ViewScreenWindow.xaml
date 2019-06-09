@@ -13,7 +13,7 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="ViewScreenWindow" Height="450" Width="800" WindowStyle="None" ResizeMode="CanMinimize">
+        Title="ViewScreenWindow" Height="450" Width="800" WindowStyle="None">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -21,6 +21,8 @@
         </Grid.RowDefinitions>
 
         <local:TitleBar DataContext="View Screen"/>
-        <Image Grid.Row="1" Name="imgScreen"/>
+        <ScrollViewer Grid.Row="1">
+            <Canvas Name="imageCanvas"/>
+        </ScrollViewer>
     </Grid>
 </Window>

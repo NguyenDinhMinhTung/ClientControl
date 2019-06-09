@@ -139,14 +139,28 @@ namespace ClientControl
                 case 10:
                     ViewScreenWindow viewScreenWindow = ListViewScreenWindow.Where(vs => { return vs.UserID == command[1]; }).FirstOrDefault();
 
-                    double width = BitConverter.ToDouble(command.Skip(2).Take(8).ToArray(), 0);
-                    double height = BitConverter.ToDouble(command.Skip(10).Take(8).ToArray(), 0);
+                    //byte[] bytew = command.Skip(2).Take(4).ToArray();
+                    //byte[] byteh = command.Skip(6).Take(4).ToArray();
+                    //double width = BitConverter.ToDouble(bytew, 0);
+                    //double height = BitConverter.ToDouble(byteh, 0);
 
-                    BitmapSource screenImage = BitmapSourceFromArray(command.Skip(17).ToArray(), (int)width, (int)height);
+                    int x = BitConverter.ToInt32(command.Skip(2).Take(4).ToArray(), 0);
+                    int y = BitConverter.ToInt32(command.Skip(6).Take(4).ToArray(), 0);
 
-                    viewScreenWindow.SetImage(screenImage);
+                    BitmapSource screenImage = BitmapSourceFromArray(command.Skip(10).ToArray());
+                    screenImage.Freeze();
+
+                    viewScreenWindow.SetImage(screenImage, x, y);
+
+                    //Console.WriteLine("new" + new Random().Next(100));
                     break;
             }
+        }
+
+        private BitmapSource BitmapSourceFromArray(byte[] data)
+        {
+            JpegBitmapDecoder jpegBitmapDecoder = new JpegBitmapDecoder(new MemoryStream(data), BitmapCreateOptions.None, BitmapCacheOption.Default);
+            return jpegBitmapDecoder.Frames[0];
         }
 
         private BitmapSource BitmapSourceFromArray(byte[] pixels, int width, int height)
@@ -267,7 +281,7 @@ namespace ClientControl
 
                 udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
 
-                for (int i = 0; i < 5000; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
                 }

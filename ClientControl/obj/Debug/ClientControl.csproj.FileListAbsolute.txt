@@ -47,3 +47,10 @@ C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\TitleBar.b
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.csprojAssemblyReference.cache
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.baml
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChatWindow.g.cs
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\TitleBar.g.cs
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.g.cs
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChatWindow.baml
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\TitleBar.baml
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.baml

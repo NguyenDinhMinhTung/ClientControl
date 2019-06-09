@@ -22,12 +22,27 @@ namespace ClientControl
         private int userID;
 
         private Action closeAction;
+
+        private Image[,] imagelist;
         public int UserID { get { return userID; } }
         public ViewScreenWindow(int userID)
         {
             InitializeComponent();
 
             this.userID = userID;
+
+            imagelist = new Image[15, 15];
+
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    imagelist[i, j] = new Image();
+                    Canvas.SetTop(imagelist[i, j], 200 * j);
+                    Canvas.SetLeft(imagelist[i, j], 200 * i);
+                    imageCanvas.Children.Add((imagelist[i, j]));
+                }
+            }
         }
 
         public void SetCloseAction(Action closeAction)
@@ -35,9 +50,12 @@ namespace ClientControl
             this.closeAction = closeAction;
         }
 
-        public void SetImage(BitmapSource bitmapSource)
+        public void SetImage(BitmapSource bitmapSource, int x, int y)
         {
-            imgScreen.Source = bitmapSource;
+            imageCanvas.Dispatcher.Invoke(() => {
+                imagelist[x, y].Source = bitmapSource;
+            });
+            
         }
     }
 }
