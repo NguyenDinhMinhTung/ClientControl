@@ -99,6 +99,7 @@ namespace ClientControl
         {
             if (String.IsNullOrWhiteSpace(txtMessage.Text)) return;
 
+            sendMessage(txtMessage.Text);
             PushMessage(txtMessage.Text, true);
             txtMessage.Text = "";
             txtMessage.Focus();
@@ -116,6 +117,11 @@ namespace ClientControl
             {
                 SendMessByController();
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            closeAction();
         }
     }
 }

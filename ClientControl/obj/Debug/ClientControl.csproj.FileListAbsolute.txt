@@ -26,7 +26,6 @@ C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\bin\Debug\MaterialDe
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\bin\Debug\MaterialDesignThemes.Wpf.dll
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\bin\Debug\MaterialDesignThemes.Wpf.xml
-C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.csprojAssemblyReference.cache
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\MainWindow.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\App.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl_MarkupCompile.cache
@@ -45,3 +44,6 @@ C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChatWindow
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\TitleBar.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\TitleBar.baml
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ClientControl.csprojAssemblyReference.cache
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.baml

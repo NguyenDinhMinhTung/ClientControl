@@ -13,9 +13,9 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="ChatWindow" Height="450" Width="362.385" KeyDown="Window_KeyDown" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="None">
+        Title="ChatWindow" Height="450" Width="362.385" KeyDown="Window_KeyDown" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="None" Closing="Window_Closing">
     <Border BorderThickness="2 0 2 2" BorderBrush="#6a1b9a">
-        <Grid Name="grid">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
@@ -34,7 +34,7 @@
 
             <DockPanel Grid.Row="3" Margin="10 10 10 10">
                 <Button Name="btnSend" DockPanel.Dock="Right" Width="100" Content="Send" VerticalAlignment="Bottom" Click="BtnSend_Click"/>
-                <TextBox x:Name="txtMessage" Margin="0 0 10 0" DockPanel.Dock="Left" materialDesign:TransitionAssist.DisableTransitions="True" materialDesign:HintAssist.Hint="Message..." materialDesign:HintAssist.Foreground="Wheat" Foreground="White"/>
+                <TextBox x:Name="txtMessage" Margin="0 0 10 0" DockPanel.Dock="Left" materialDesign:TransitionAssist.DisableTransitions="True" materialDesign:HintAssist.Hint="Message..."/>
             </DockPanel>
         </Grid>
     </Border>
