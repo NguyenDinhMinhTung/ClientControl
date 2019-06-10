@@ -27,7 +27,7 @@ namespace ClientControl
         private const String serverIP = "14.9.118.64";
         private const int serverPort = 8530;
 
-        private const int localPort = 7574;
+        private const int localPort = 9939;
 
         UDPProtocol udpProtocol;
 
