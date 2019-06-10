@@ -54,3 +54,5 @@ C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\GeneratedInt
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChatWindow.baml
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\TitleBar.baml
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.baml
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.g.cs
+C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.baml

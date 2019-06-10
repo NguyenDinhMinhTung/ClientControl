@@ -61,6 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChangeNameWindow.xaml.cs">
+      <DependentUpon>ChangeNameWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,10 @@
     <Compile Include="ViewScreenWindow.xaml.cs">
       <DependentUpon>ViewScreenWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="ChangeNameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
