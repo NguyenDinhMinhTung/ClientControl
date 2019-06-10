@@ -51,7 +51,7 @@ namespace ClientControl
             parentWindow = getParentWindow();
             if (parentWindow == null) return;
 
-            parentWindow.MouseMove += new MouseEventHandler((o, ex) =>
+            this.MouseMove += new MouseEventHandler((o, ex) =>
             {
                 if (ex.LeftButton == MouseButtonState.Pressed)
                 {

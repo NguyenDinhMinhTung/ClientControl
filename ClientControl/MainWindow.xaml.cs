@@ -27,7 +27,7 @@ namespace ClientControl
         private const String serverIP = "14.9.118.64";
         private const int serverPort = 8530;
 
-        private const int localPort = 9939;
+        private const int localPort = 80;
 
         UDPProtocol udpProtocol;
 
@@ -277,15 +277,16 @@ namespace ClientControl
             {
                 User user = listViewUsers.SelectedItem as User;
                 IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
-                int userid = ipport.UserId;
+                //int userid = ipport.UserId;
 
-                udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
+                //udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
 
-                for (int i = 0; i < 2; i++)
-                {
-                    udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
-                }
+                //for (int i = 0; i < 2; i++)
+                //{
+                //    udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
+                //}
 
+                EstablishConnection(user, ipport);
                 ShowChatWindow(ipport);
             }
         }
@@ -325,7 +326,22 @@ namespace ClientControl
         {
             btnChat.IsEnabled = btnFileExplorer.IsEnabled =
             btnMessageBox.IsEnabled = btnRestart.IsEnabled =
-            btnShutdown.IsEnabled = btnViewScreen.IsEnabled = isEnable;
+            btnShutdown.IsEnabled = btnViewScreen.IsEnabled =
+            btnChangeName.IsEnabled = isEnable;
+        }
+
+        private void EstablishConnection(User user, IPPort iPPort)
+        {
+            //IPPort iPPort = listIPPort.Where((ipp) => { return ipp.UserId == user.ID; }).FirstOrDefault();
+
+            byte[] data = new byte[] { 7, (byte)user.ID };
+            udpProtocol.UdpSocketSend(serverIP, serverPort, data);
+
+            System.Threading.Thread.Sleep(50);
+            for (int i = 0; i < 5; i++)
+            {
+                udpProtocol.UdpSocketSend(iPPort.IP, iPPort.Port, new byte[] { 0 });
+            }
         }
 
         private void ListViewUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -347,14 +363,32 @@ namespace ClientControl
             User user = listViewUsers.SelectedItem as User;
 
             IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
-            int userid = ipport.UserId;
+            //int userid = ipport.UserId;
 
-            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 10, (byte)userid });
+            //udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 10, (byte)userid });
 
-            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
-            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
+            //udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
+            //udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
+
+            EstablishConnection(user, ipport);
+
+            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 10 });
 
             ShowViewScreenWindow(user);
+        }
+
+        private void BtnChangeName_Click(object sender, RoutedEventArgs e)
+        {
+            User user = listViewUsers.SelectedItem as User;
+            ChangeNameWindow changeNameWindow = new ChangeNameWindow(user.Name, str => {
+                byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(str);
+                byte[] sendData = new byte[] { 2, (byte)user.ID }.Concat(nameBytes).ToArray();
+                udpProtocol.UdpSocketSend(serverIP, serverPort, sendData);
+                RefreshUserList();
+                GetIPPortList();
+            });
+
+            changeNameWindow.ShowDialog();
         }
     }
 }
