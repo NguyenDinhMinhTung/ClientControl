@@ -55,7 +55,16 @@ namespace ClientControl
         private void SendChatMess(String text, IPPort ipPort)
         {
             byte[] textbyte = System.Text.Encoding.UTF8.GetBytes(text);
-            byte[] sendbyte = new byte[] { 8, 1, (byte)ipPort.UserId }.Concat(textbyte).ToArray();
+            byte[] sendbyte = null;
+            if (udpProtocol.isServerOver)
+            {
+                sendbyte = new byte[] { 11, 8, 1, (byte)ipPort.UserId }.Concat(textbyte).ToArray();
+            }
+            else
+            {
+                sendbyte = new byte[] { 8, 1, (byte)ipPort.UserId }.Concat(textbyte).ToArray();
+            }
+
             udpProtocol.UdpSocketSend(ipPort.IP, ipPort.Port, sendbyte);
         }
     }

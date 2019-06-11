@@ -90,7 +90,7 @@ namespace ClientControl
 
                 case 8:
                     IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == command[1]; }).FirstOrDefault();
-                    String mess = System.Text.Encoding.UTF8.GetString(command, 2, command.Length - 2);
+                    String mess = System.Text.Encoding.UTF8.GetString(command, 3, command.Length - 3);
 
                     chatWindowManager.ShowChatWindow(ipport, mess);
                     break;
