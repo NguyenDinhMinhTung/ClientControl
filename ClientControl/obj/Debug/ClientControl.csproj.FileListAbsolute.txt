@@ -56,3 +56,5 @@ C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\TitleBar.bam
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ViewScreenWindow.baml
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.g.cs
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.baml
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.baml
