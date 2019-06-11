@@ -34,8 +34,10 @@ namespace ClientControl
         ObservableCollection<IPPort> listIPPort;
         ObservableCollection<User> listUser;
 
-        List<ChatWindow> listChatWindow;
+
         List<ViewScreenWindow> ListViewScreenWindow;
+
+        ChatWindowManager chatWindowManager;
 
         public MainWindow()
         {
@@ -46,20 +48,23 @@ namespace ClientControl
                 //System.Net.Sockets.UdpClient udpClient = new System.Net.Sockets.UdpClient("14.9.118.64", 8530);
                 //udpClient.Send(new byte[] { 0 }, 1);
 
+                udpProtocol = new UDPProtocol(localPort);
+                udpProtocol.UdpSocketReceiveStart(RunCommand);
+
                 listIPPort = new ObservableCollection<IPPort>();
                 listUser = new ObservableCollection<User>();
-                listChatWindow = new List<ChatWindow>();
+
+                chatWindowManager = new ChatWindowManager(udpProtocol);
                 ListViewScreenWindow = new List<ViewScreenWindow>();
 
                 listViewUsers.ItemsSource = listUser;
 
-                udpProtocol = new UDPProtocol(localPort);
-                udpProtocol.UdpSocketReceiveStart(RunCommand);
+
 
                 SendIPPort();
                 RefreshUserList();
                 GetIPPortList();
-                enableControlButton(false);
+                EnableControlButton(false);
             }
             catch (Exception ex)
             {
@@ -75,31 +80,8 @@ namespace ClientControl
                     break;
 
                 case 4:
-                    String strList = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
-                    String[] split = strList.Split('|');
-
-                    Dispatcher.Invoke(() =>
-                    {
-                        listIPPort.Clear();
-                    });
-
-
-                    int i = 0;
-                    while (i < split.Length)
-                    {
-                        int id = int.Parse(split[i++]);
-                        int userid = int.Parse(split[i++]);
-                        String ip = split[i++];
-                        int port = int.Parse(split[i++]);
-                        DateTime dateTime = DateTime.Parse(split[i++]);
-
-                        IPPort ipPort = new IPPort(id, userid, ip, port, dateTime);
-                        Dispatcher.Invoke(() =>
-                        {
-                            listIPPort.Add(ipPort);
-                        });
-                    }
-
+                    String strListIPPort = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
+                    listIPPort = IPPort.GetListIPPort(strListIPPort);
                     break;
 
                 case 7:
@@ -110,30 +92,12 @@ namespace ClientControl
                     IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == command[1]; }).FirstOrDefault();
                     String mess = System.Text.Encoding.UTF8.GetString(command, 2, command.Length - 2);
 
-                    ShowChatWindow(ipport, mess);
+                    chatWindowManager.ShowChatWindow(ipport, mess);
                     break;
 
                 case 9:
                     String strListUser = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
-                    String[] splitListUser = strListUser.Split('|');
-
-                    Dispatcher.Invoke(() =>
-                    {
-                        listUser.Clear();
-                    });
-
-                    int k = 0;
-                    while (k < splitListUser.Length)
-                    {
-                        int id = int.Parse(splitListUser[k++]);
-                        String name = splitListUser[k++];
-
-                        User user = new User(id, name);
-                        Dispatcher.Invoke(() =>
-                        {
-                            listUser.Add(user);
-                        });
-                    }
+                    listUser = User.GetListUser(strListUser);
                     break;
 
                 case 10:
@@ -161,33 +125,6 @@ namespace ClientControl
         {
             JpegBitmapDecoder jpegBitmapDecoder = new JpegBitmapDecoder(new MemoryStream(data), BitmapCreateOptions.None, BitmapCacheOption.Default);
             return jpegBitmapDecoder.Frames[0];
-        }
-
-        private BitmapSource BitmapSourceFromArray(byte[] pixels, int width, int height)
-        {
-            WriteableBitmap bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
-
-            bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * (bitmap.Format.BitsPerPixel / 8), 0);
-
-            return bitmap;
-        }
-
-        private static BitmapImage ConvertByteArrayToBitmap(byte[] imageData)
-        {
-            if (imageData == null || imageData.Length == 0) return null;
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageData))
-            {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
-            }
-            image.Freeze();
-            return image;
         }
 
         public void SendIPPort()
@@ -237,39 +174,7 @@ namespace ClientControl
             viewScreenWindow.Show();
         }
 
-        private void ShowChatWindow(IPPort iPPort, String message = null)
-        {
-            ChatWindow chatWindow = listChatWindow.Where((chatwin) => { return chatwin.UserID == iPPort.UserId; }).FirstOrDefault();
 
-            if (chatWindow == null)
-            {
-                chatWindow = new ChatWindow(mess =>
-                {
-                    SendChatMess(mess, iPPort.IP, iPPort.Port);
-                },
-                   iPPort.UserId);
-
-                chatWindow.SetCloseAction(() =>
-                {
-                    listChatWindow.Remove(chatWindow);
-                });
-
-                listChatWindow.Add(chatWindow);
-            }
-
-            chatWindow.Dispatcher.Invoke(() =>
-            {
-                chatWindow.Show();
-            });
-
-            if (message != null)
-            {
-                chatWindow.Dispatcher.Invoke(() =>
-                {
-                    chatWindow.PushMessage(message, false);
-                });
-            }
-        }
 
         private void BtnChat_Click(object sender, RoutedEventArgs e)
         {
@@ -277,21 +182,13 @@ namespace ClientControl
             {
                 User user = listViewUsers.SelectedItem as User;
                 IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
-                //int userid = ipport.UserId;
-
-                //udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 7, (byte)userid });
-
-                //for (int i = 0; i < 2; i++)
-                //{
-                //    udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
-                //}
 
                 EstablishConnection(user, ipport);
-                ShowChatWindow(ipport);
+                chatWindowManager.ShowChatWindow(ipport);
             }
         }
 
-        private void setUserStatus(User user)
+        private void ShowUserDetaiInfo(User user)
         {
             if (user != null)
             {
@@ -308,26 +205,12 @@ namespace ClientControl
             }
         }
 
-        private void SendChatMess(String text, String clientIP, int port)
-        {
-            if (clientIP == null) return;
-
-            byte[] textbyte = System.Text.Encoding.UTF8.GetBytes(text);
-            byte[] sendbyte = new byte[textbyte.Length + 1];
-
-            sendbyte[0] = 8;
-
-            Array.Copy(textbyte, 0, sendbyte, 1, textbyte.Length);
-
-            udpProtocol.UdpSocketSend(clientIP, port, sendbyte);
-        }
-
-        private void enableControlButton(Boolean isEnable)
+        private void EnableControlButton(Boolean isEnable)
         {
             btnChat.IsEnabled = btnFileExplorer.IsEnabled =
             btnMessageBox.IsEnabled = btnRestart.IsEnabled =
             btnShutdown.IsEnabled = btnViewScreen.IsEnabled =
-            btnChangeName.IsEnabled = isEnable;
+            btnChangeName.IsEnabled = ckbOverServer.IsEnabled = isEnable;
         }
 
         private void EstablishConnection(User user, IPPort iPPort)
@@ -348,13 +231,13 @@ namespace ClientControl
         {
             if (listViewUsers.SelectedIndex < 0)
             {
-                enableControlButton(false);
-                setUserStatus(null);
+                EnableControlButton(false);
+                ShowUserDetaiInfo(null);
             }
             else
             {
-                enableControlButton(true);
-                setUserStatus(listViewUsers.SelectedItem as User);
+                EnableControlButton(true);
+                ShowUserDetaiInfo(listViewUsers.SelectedItem as User);
             }
         }
 
@@ -380,7 +263,8 @@ namespace ClientControl
         private void BtnChangeName_Click(object sender, RoutedEventArgs e)
         {
             User user = listViewUsers.SelectedItem as User;
-            ChangeNameWindow changeNameWindow = new ChangeNameWindow(user.Name, str => {
+            ChangeNameWindow changeNameWindow = new ChangeNameWindow(user.Name, str =>
+            {
                 byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(str);
                 byte[] sendData = new byte[] { 2, (byte)user.ID }.Concat(nameBytes).ToArray();
                 udpProtocol.UdpSocketSend(serverIP, serverPort, sendData);

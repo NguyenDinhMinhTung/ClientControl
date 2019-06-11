@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,28 @@ namespace ClientControl.model
             this.Port = port;
             this.DateTime = dateTime;
         }
+
+        public static ObservableCollection<IPPort> GetListIPPort(String strList)
+        {
+            String[] split = strList.Split('|');
+            ObservableCollection<IPPort> result = new ObservableCollection<IPPort>();
+
+            int i = 0;
+            while (i < split.Length)
+            {
+                int id = int.Parse(split[i++]);
+                int userid = int.Parse(split[i++]);
+                String ip = split[i++];
+                int port = int.Parse(split[i++]);
+                DateTime dateTime = System.DateTime.Parse(split[i++]);
+
+                IPPort ipPort = new IPPort(id, userid, ip, port, dateTime);
+                result.Add(ipPort);
+            }
+
+            return result;
+        }
+
         public DateTime? DateTime
         {
             get { return dateTime; }
