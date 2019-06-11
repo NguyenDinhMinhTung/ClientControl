@@ -24,8 +24,7 @@ namespace ClientControl
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const String serverIP = "14.9.118.64";
-        private const int serverPort = 8530;
+
 
         private const int localPort = 46800;
 
@@ -59,7 +58,7 @@ namespace ClientControl
 
                 listViewUsers.ItemsSource = listUser;
 
-
+                //listUser.Add(new User(1, "aaa"));
 
                 SendIPPort();
                 RefreshUserList();
@@ -98,6 +97,10 @@ namespace ClientControl
                 case 9:
                     String strListUser = System.Text.Encoding.UTF8.GetString(command, 1, command.Length - 1);
                     listUser = User.GetListUser(strListUser);
+                    listViewUsers.Dispatcher.Invoke(() =>
+                    {
+                        listViewUsers.ItemsSource = listUser;
+                    });
                     break;
 
                 case 10:
@@ -129,12 +132,12 @@ namespace ClientControl
 
         public void SendIPPort()
         {
-            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 3, 1 });
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 3, 1 });
         }
 
         private void GetIPPortList()
         {
-            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 4 });
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 4 });
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -147,7 +150,7 @@ namespace ClientControl
 
         public void RefreshUserList()
         {
-            udpProtocol.UdpSocketSend(serverIP, serverPort, new byte[] { 9 });
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 9 });
         }
 
         private void BtnRefreshUserList_Click(object sender, RoutedEventArgs e)
@@ -218,7 +221,7 @@ namespace ClientControl
             //IPPort iPPort = listIPPort.Where((ipp) => { return ipp.UserId == user.ID; }).FirstOrDefault();
 
             byte[] data = new byte[] { 7, (byte)user.ID };
-            udpProtocol.UdpSocketSend(serverIP, serverPort, data);
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, data);
 
             System.Threading.Thread.Sleep(50);
             for (int i = 0; i < 5; i++)
@@ -267,12 +270,30 @@ namespace ClientControl
             {
                 byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(str);
                 byte[] sendData = new byte[] { 2, (byte)user.ID }.Concat(nameBytes).ToArray();
-                udpProtocol.UdpSocketSend(serverIP, serverPort, sendData);
+                udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, sendData);
                 RefreshUserList();
                 GetIPPortList();
             });
 
             changeNameWindow.ShowDialog();
+        }
+
+        private void CkbOverServer_Checked(object sender, RoutedEventArgs e)
+        {
+            udpProtocol.isServerOver = true;
+            User user = listViewUsers.SelectedItem as User;
+            IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
+
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 11, 12, 1, (byte)user.ID, 1 });
+        }
+
+        private void CkbOverServer_Unchecked(object sender, RoutedEventArgs e)
+        {
+            udpProtocol.isServerOver = false;
+            User user = listViewUsers.SelectedItem as User;
+            IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
+
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 11, 12, 1, (byte)user.ID, 0 });
         }
     }
 }

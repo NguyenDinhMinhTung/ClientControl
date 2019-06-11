@@ -59,13 +59,15 @@ namespace ClientControl
             if (udpProtocol.isServerOver)
             {
                 sendbyte = new byte[] { 11, 8, 1, (byte)ipPort.UserId }.Concat(textbyte).ToArray();
+                udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, sendbyte);
             }
             else
             {
                 sendbyte = new byte[] { 8, 1, (byte)ipPort.UserId }.Concat(textbyte).ToArray();
+                udpProtocol.UdpSocketSend(ipPort.IP, ipPort.Port, sendbyte);
             }
 
-            udpProtocol.UdpSocketSend(ipPort.IP, ipPort.Port, sendbyte);
+
         }
     }
 }
