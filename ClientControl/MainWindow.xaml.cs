@@ -258,7 +258,7 @@ namespace ClientControl
 
             EstablishConnection(user, ipport);
 
-            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 10 });
+            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 10, 1, (byte)user.ID });
 
             ShowViewScreenWindow(user);
         }
