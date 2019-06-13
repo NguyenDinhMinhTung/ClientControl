@@ -1,4 +1,4 @@
-﻿<Window x:Class="ClientControl.ViewScreenWindow"
+﻿<Window x:Class="ClientControl.FileExplorerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,16 +13,28 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="ViewScreenWindow" Height="450" Width="800" WindowStyle="None" Closing="Window_Closing">
+        Title="FileExplorerWindow" Height="448.753" Width="387.396" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <local:TitleBar DataContext="View Screen"/>
-        <ScrollViewer Grid.Row="1">
-            <Canvas Name="imageCanvas"/>
-        </ScrollViewer>
+        <local:TitleBar Grid.Row="0" DataContext="File Explorer"/>
+
+        <TextBlock Grid.Row="1" Name="txtPath" Text="Path:" FontSize="15"/>
+
+        <ListBox Name="lstFile" Grid.Row="2"/>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="btnDelete" Grid.Column="0" Content="Delete"/>
+        </Grid>
     </Grid>
 </Window>

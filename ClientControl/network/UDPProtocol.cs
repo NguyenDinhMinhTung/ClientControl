@@ -20,21 +20,35 @@ namespace ClientControl
 
         public String serverIP = "14.9.118.64";
         public int serverPort = 8530;
+
+        private IPEndPoint serverIPEndPoint;
         public UDPProtocol(int localPort)
         {
             this.localPort = localPort;
 
             udpClient = new System.Net.Sockets.UdpClient(localPort);
             udpClient.AllowNatTraversal(true);
+            this.serverIPEndPoint = new IPEndPoint(IPAddress.Parse(serverIP), serverPort);
         }
 
         public void UdpSocketSend(IPEndPoint iPEndPoint, byte[] data)
         {
+            if (isServerOver)
+            {
+                data = new byte[] { 11 }.Concat(data).ToArray();
+                iPEndPoint = serverIPEndPoint;
+            }
             udpClient.Send(data, data.Length, iPEndPoint);
         }
 
         public void UdpSocketSend(String host, int port, byte[] data)
         {
+            if (isServerOver)
+            {
+                data = new byte[] { 11 }.Concat(data).ToArray();
+                host = serverIP;
+                port = serverPort;
+            }
             udpClient.Send(data, data.Length, host, port);
         }
 

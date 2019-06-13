@@ -67,13 +67,17 @@
     <Compile Include="ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ChatWindowManager.cs" />
+    <Compile Include="FileExplorerWindow.xaml.cs">
+      <DependentUpon>FileExplorerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="manager\ChatWindowManager.cs" />
     <Compile Include="model\IPPort.cs" />
     <Compile Include="model\User.cs" />
     <Compile Include="TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UDPProtocol.cs" />
+    <Compile Include="network\UDPProtocol.cs" />
+    <Compile Include="manager\ViewScreenManager.cs" />
     <Compile Include="ViewScreenWindow.xaml.cs">
       <DependentUpon>ViewScreenWindow.xaml</DependentUpon>
     </Compile>
@@ -82,6 +86,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FileExplorerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
