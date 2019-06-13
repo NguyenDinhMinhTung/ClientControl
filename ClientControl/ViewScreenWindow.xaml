@@ -13,7 +13,7 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="ViewScreenWindow" Height="450" Width="800" WindowStyle="None">
+        Title="ViewScreenWindow" Height="450" Width="800" WindowStyle="None" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

@@ -24,8 +24,6 @@ namespace ClientControl
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
         private const int localPort = 46800;
 
         UDPProtocol udpProtocol;
@@ -33,10 +31,8 @@ namespace ClientControl
         ObservableCollection<IPPort> listIPPort;
         ObservableCollection<User> listUser;
 
-
-        List<ViewScreenWindow> ListViewScreenWindow;
-
         ChatWindowManager chatWindowManager;
+        ViewScreenManager viewScreenManager;
 
         public MainWindow()
         {
@@ -54,11 +50,9 @@ namespace ClientControl
                 listUser = new ObservableCollection<User>();
 
                 chatWindowManager = new ChatWindowManager(udpProtocol);
-                ListViewScreenWindow = new List<ViewScreenWindow>();
+                viewScreenManager = new ViewScreenManager(udpProtocol);
 
                 listViewUsers.ItemsSource = listUser;
-
-                //listUser.Add(new User(1, "aaa"));
 
                 SendIPPort();
                 RefreshUserList();
@@ -104,22 +98,13 @@ namespace ClientControl
                     break;
 
                 case 10:
-                    ViewScreenWindow viewScreenWindow = ListViewScreenWindow.Where(vs => { return vs.UserID == command[1]; }).FirstOrDefault();
+                    int x = BitConverter.ToInt32(command.Skip(3).Take(4).ToArray(), 0);
+                    int y = BitConverter.ToInt32(command.Skip(7).Take(4).ToArray(), 0);
 
-                    //byte[] bytew = command.Skip(2).Take(4).ToArray();
-                    //byte[] byteh = command.Skip(6).Take(4).ToArray();
-                    //double width = BitConverter.ToDouble(bytew, 0);
-                    //double height = BitConverter.ToDouble(byteh, 0);
-
-                    int x = BitConverter.ToInt32(command.Skip(2).Take(4).ToArray(), 0);
-                    int y = BitConverter.ToInt32(command.Skip(6).Take(4).ToArray(), 0);
-
-                    BitmapSource screenImage = BitmapSourceFromArray(command.Skip(10).ToArray());
+                    BitmapSource screenImage = BitmapSourceFromArray(command.Skip(11).ToArray());
                     screenImage.Freeze();
 
-                    viewScreenWindow.SetImage(screenImage, x, y);
-
-                    //Console.WriteLine("new" + new Random().Next(100));
+                    viewScreenManager.SetImage(command[1], screenImage, x, y);
                     break;
             }
         }
@@ -159,26 +144,6 @@ namespace ClientControl
             GetIPPortList();
         }
 
-        private void ShowViewScreenWindow(User user)
-        {
-            ViewScreenWindow viewScreenWindow = ListViewScreenWindow.Where(win => { return win.UserID == user.ID; }).FirstOrDefault();
-
-            if (viewScreenWindow == null)
-            {
-                viewScreenWindow = new ViewScreenWindow(user.ID);
-                viewScreenWindow.SetCloseAction(() =>
-                {
-                    ListViewScreenWindow.Remove(viewScreenWindow);
-                });
-
-                ListViewScreenWindow.Add(viewScreenWindow);
-            }
-
-            viewScreenWindow.Show();
-        }
-
-
-
         private void BtnChat_Click(object sender, RoutedEventArgs e)
         {
             if (listViewUsers.SelectedIndex >= 0)
@@ -186,7 +151,7 @@ namespace ClientControl
                 User user = listViewUsers.SelectedItem as User;
                 IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
 
-                EstablishConnection(user, ipport);
+                if (!udpProtocol.isServerOver) EstablishConnection(user, ipport);
                 chatWindowManager.ShowChatWindow(ipport);
             }
         }
@@ -220,13 +185,13 @@ namespace ClientControl
         {
             //IPPort iPPort = listIPPort.Where((ipp) => { return ipp.UserId == user.ID; }).FirstOrDefault();
 
-            byte[] data = new byte[] { 7, (byte)user.ID };
+            byte[] data = new byte[] { 7, 1, (byte)user.ID };
             udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, data);
 
             System.Threading.Thread.Sleep(50);
             for (int i = 0; i < 5; i++)
             {
-                udpProtocol.UdpSocketSend(iPPort.IP, iPPort.Port, new byte[] { 0 });
+                udpProtocol.UdpSocketSend(iPPort.IP, iPPort.Port, new byte[] { 0, 1, (byte)user.ID });
             }
         }
 
@@ -256,11 +221,9 @@ namespace ClientControl
             //udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
             //udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 0 });
 
-            EstablishConnection(user, ipport);
+            if (!udpProtocol.isServerOver) EstablishConnection(user, ipport);
 
-            udpProtocol.UdpSocketSend(ipport.IP, ipport.Port, new byte[] { 10, 1, (byte)user.ID });
-
-            ShowViewScreenWindow(user);
+            viewScreenManager.ShowViewScreenWindow(ipport);
         }
 
         private void BtnChangeName_Click(object sender, RoutedEventArgs e)
@@ -284,7 +247,7 @@ namespace ClientControl
             User user = listViewUsers.SelectedItem as User;
             IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
 
-            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 11, 12, 1, (byte)user.ID, 1 });
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 12, 1, (byte)user.ID, 1 });
         }
 
         private void CkbOverServer_Unchecked(object sender, RoutedEventArgs e)
@@ -293,7 +256,7 @@ namespace ClientControl
             User user = listViewUsers.SelectedItem as User;
             IPPort ipport = listIPPort.Where(ipp => { return ipp.UserId == user.ID; }).FirstOrDefault();
 
-            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 11, 12, 1, (byte)user.ID, 0 });
+            udpProtocol.UdpSocketSend(udpProtocol.serverIP, udpProtocol.serverPort, new byte[] { 12, 1, (byte)user.ID, 0 });
         }
     }
 }
