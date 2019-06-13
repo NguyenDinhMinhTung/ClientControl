@@ -13,28 +13,43 @@
 		TextOptions.TextRenderingMode="Auto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="FileExplorerWindow" Height="448.753" Width="387.396" WindowStyle="None" ResizeMode="NoResize">
+        Title="FileExplorerWindow" Height="448.753" Width="517.992" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-
         <local:TitleBar Grid.Row="0" DataContext="File Explorer"/>
 
-        <TextBlock Grid.Row="1" Name="txtPath" Text="Path:" FontSize="15"/>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
-        <ListBox Name="lstFile" Grid.Row="2"/>
 
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
 
-            <Button Name="btnDelete" Grid.Column="0" Content="Delete"/>
+            <TextBlock Grid.Row="0" Name="txtPath" Text="Path:" FontSize="15"/>
+
+            <ListBox Name="lstFile" Grid.Row="1"/>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Button Name="btnDelete" Grid.Column="0" Content="Delete" Margin="10 10 10 0"/>
+                <Button Name="btnRename" Grid.Column="1" Content="ReName" Margin="10 10 10 0"/>
+
+                <Button Name="btnView" Grid.Column="0" Grid.Row="1" Content="View" Margin="10"/>
+                <Button Name="btnReLoad" Grid.Column="1" Grid.Row="1" Content="Reload" Margin="10"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

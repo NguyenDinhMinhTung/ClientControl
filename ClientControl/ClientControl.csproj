@@ -71,6 +71,7 @@
       <DependentUpon>FileExplorerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="manager\ChatWindowManager.cs" />
+    <Compile Include="manager\FileExplorerManager.cs" />
     <Compile Include="model\IPPort.cs" />
     <Compile Include="model\User.cs" />
     <Compile Include="TitleBar.xaml.cs">
