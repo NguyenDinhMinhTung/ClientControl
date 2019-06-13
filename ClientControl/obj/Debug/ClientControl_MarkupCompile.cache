@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\
 ClientControl
 none
 false
 DEBUG;TRACE
-C:\Users\nguyen2\source\repos\ClientControl\ClientControl\App.xaml
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\App.xaml
 51205035419
 
-13-2020925733
-15479715092
+14535344972
+15-1959167074
 ChangeNameWindow.xaml;ChatWindow.xaml;MainWindow.xaml;TitleBar.xaml;ViewScreenWindow.xaml;
 
-False
+True
 
