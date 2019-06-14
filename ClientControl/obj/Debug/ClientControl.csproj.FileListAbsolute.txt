@@ -58,3 +58,5 @@ C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWi
 C:\Users\nguyen2\source\repos\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.baml
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.g.cs
 C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\ChangeNameWindow.baml
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\FileExplorerWindow.g.cs
+C:\Users\megas\Documents\GitHub\ClientControl\ClientControl\obj\Debug\FileExplorerWindow.baml
