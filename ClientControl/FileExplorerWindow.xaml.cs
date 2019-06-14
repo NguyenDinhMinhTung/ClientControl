@@ -19,9 +19,13 @@ namespace ClientControl
     /// </summary>
     public partial class FileExplorerWindow : Window
     {
-        public FileExplorerWindow()
+
+        public int UserID { get; set; }
+        public FileExplorerWindow(int UserId)
         {
             InitializeComponent();
+
+            this.UserID = UserId;
         }
     }
 }

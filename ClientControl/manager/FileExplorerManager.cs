@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientControl.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,16 @@ namespace ClientControl.manager
         {
             this.udpProtocol = udpProtocol;
             listFileExplorerWindow = new List<FileExplorerWindow>();
+        }
+
+        public void ShowFileExplorerWindow(IPPort ipport)
+        {
+            FileExplorerWindow fileExplorerWindow = listFileExplorerWindow.Where(win => { return win.UserID == ipport.UserId; }).FirstOrDefault();
+
+            if (fileExplorerWindow == null)
+            {
+
+            }
         }
     }
 }
